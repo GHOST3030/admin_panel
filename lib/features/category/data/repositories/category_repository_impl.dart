@@ -1,6 +1,4 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:logging/logging.dart';
-
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/logging/app_logger.dart';
