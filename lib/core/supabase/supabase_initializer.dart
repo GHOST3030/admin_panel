@@ -1,4 +1,3 @@
-import 'package:logging/logging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
 
@@ -6,7 +5,7 @@ import '../constants/app_constants.dart';
 import '../logging/app_logger.dart';
 
 abstract final class SupabaseInitializer {
-  static final Logger _log = AppLogger.getLogger('SupabaseInitializer');
+  static final _log = AppLogger.getLogger('SupabaseInitializer');
 
   static Future<void> init() async {
     _log.info('Supabase initialization started');
