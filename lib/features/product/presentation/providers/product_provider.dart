@@ -1,6 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logging/logging.dart';
-
 import '../../../../core/di/providers.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../states/product_state.dart';

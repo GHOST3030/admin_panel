@@ -1,4 +1,3 @@
-import 'package:logging/logging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/errors/exceptions.dart';

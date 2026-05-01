@@ -1,8 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logging/logging.dart';
-
 import '../../../../core/di/providers.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../data/image_upload_datasource.dart';
