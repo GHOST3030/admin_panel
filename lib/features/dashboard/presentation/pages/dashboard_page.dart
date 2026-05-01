@@ -14,9 +14,9 @@ class DashboardPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final statsAsync  = ref.watch(dashboardStatsProvider);
+    final statsAsync = ref.watch(dashboardStatsProvider);
     final ordersAsync = ref.watch(recentOrdersProvider);
-    final currency    = NumberFormat.currency(symbol: '\$');
+    final currency = NumberFormat.currency(symbol: '\$');
 
     return AdaptiveScaffold(
       appBar: AppBar(title: const Text('Dashboard')),
@@ -31,12 +31,12 @@ class DashboardPage extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   // ── Stat Cards ──────────────────────────────
                   statsAsync.when(
                     loading: () => const _StatsShimmer(),
                     error: (e, _) => _ErrorBanner('$e'),
-                    data: (stats) => _StatsGrid(stats: stats, currency: currency),
+                    data: (stats) =>
+                        _StatsGrid(stats: stats, currency: currency),
                   ),
 
                   const SizedBox(height: 32),
@@ -53,45 +53,47 @@ class DashboardPage extends ConsumerWidget {
 
                   ordersAsync.when(
                     loading: () => const Center(
-                        heightFactor: 3,
-                        child: CircularProgressIndicator()),
+                        heightFactor: 3, child: CircularProgressIndicator()),
                     error: (e, _) => _ErrorBanner('$e'),
                     data: (orders) => AdaptiveTable<Map<String, dynamic>>(
                       columns: const [
-                        'Order ID', 'Customer', 'Status', 'Amount', 'Date',
+                        'Order ID',
+                        'Customer',
+                        'Status',
+                        'Amount',
+                        'Date',
                       ],
                       tabletColumns: const [
-                        'Order ID', 'Status', 'Amount',
+                        'Order ID',
+                        'Status',
+                        'Amount',
                       ],
                       items: orders,
                       desktopRow: (o, isTablet) {
-                        final date = DateTime.tryParse(
-                            o['created_at'] as String? ?? '');
+                        final date =
+                            DateTime.tryParse(o['created_at'] as String? ?? '');
                         final cells = isTablet
                             ? [
-                                DataCell(Text(
-                                    (o['id'] as String).substring(0, 8))),
-                                DataCell(_StatusChip(
-                                    o['status'] as String? ?? '')),
+                                DataCell(
+                                    Text((o['id'] as String).substring(0, 8))),
+                                DataCell(
+                                    _StatusChip(o['status'] as String? ?? '')),
                                 DataCell(Text(currency.format(
-                                    (o['total_amount'] as num?)
-                                            ?.toDouble() ??
+                                    (o['total_amount'] as num?)?.toDouble() ??
                                         0))),
                               ]
                             : [
+                                DataCell(
+                                    Text((o['id'] as String).substring(0, 8))),
                                 DataCell(Text(
-                                    (o['id'] as String).substring(0, 8))),
-                                DataCell(Text(
-                                  ((o['users'] as Map?)?['email']
-                                          as String?) ??
+                                  ((o['users'] as Map?)?['email'] as String?) ??
                                       '—',
                                   overflow: TextOverflow.ellipsis,
                                 )),
-                                DataCell(_StatusChip(
-                                    o['status'] as String? ?? '')),
+                                DataCell(
+                                    _StatusChip(o['status'] as String? ?? '')),
                                 DataCell(Text(currency.format(
-                                    (o['total_amount'] as num?)
-                                            ?.toDouble() ??
+                                    (o['total_amount'] as num?)?.toDouble() ??
                                         0))),
                                 DataCell(Text(date != null
                                     ? DateFormat('MMM d, yyyy').format(date)
@@ -100,8 +102,8 @@ class DashboardPage extends ConsumerWidget {
                         return DataRow(cells: cells);
                       },
                       mobileCard: (o) {
-                        final date = DateTime.tryParse(
-                            o['created_at'] as String? ?? '');
+                        final date =
+                            DateTime.tryParse(o['created_at'] as String? ?? '');
                         return Card(
                           child: Padding(
                             padding: const EdgeInsets.all(16),
@@ -117,14 +119,12 @@ class DashboardPage extends ConsumerWidget {
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    _StatusChip(
-                                        o['status'] as String? ?? ''),
+                                    _StatusChip(o['status'] as String? ?? ''),
                                   ],
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  ((o['users'] as Map?)?['email']
-                                          as String?) ??
+                                  ((o['users'] as Map?)?['email'] as String?) ??
                                       '—',
                                   style: Theme.of(context).textTheme.bodySmall,
                                 ),
@@ -133,10 +133,11 @@ class DashboardPage extends ConsumerWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(currency.format(
-                                        (o['total_amount'] as num?)
-                                                ?.toDouble() ??
-                                            0),
+                                    Text(
+                                        currency.format(
+                                            (o['total_amount'] as num?)
+                                                    ?.toDouble() ??
+                                                0),
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w600)),
                                     Text(
@@ -180,16 +181,29 @@ class _StatsGrid extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
-      childAspectRatio: context.responsiveWhen(mobile: 2.4, tablet: 2.6, desktop: 3.0),
+      childAspectRatio:
+          context.responsiveWhen(mobile: 2.4, tablet: 2.6, desktop: 3.0),
       children: [
-        StatCard(title: 'Total Orders',   value: '${stats.totalOrders}',
-            icon: Icons.receipt_long_rounded, color: const Color(0xFF4361EE)),
-        StatCard(title: 'Total Revenue',  value: currency.format(stats.totalRevenue),
-            icon: Icons.attach_money_rounded, color: const Color(0xFF2DC653)),
-        StatCard(title: 'Total Products', value: '${stats.totalProducts}',
-            icon: Icons.inventory_2_rounded, color: const Color(0xFFF4A261)),
-        StatCard(title: 'Total Users',    value: '${stats.totalUsers}',
-            icon: Icons.people_rounded, color: const Color(0xFFE63946)),
+        StatCard(
+            title: 'Total Orders',
+            value: '${stats.totalOrders}',
+            icon: Icons.receipt_long_rounded,
+            color: const Color(0xFF4361EE)),
+        StatCard(
+            title: 'Total Revenue',
+            value: currency.format(stats.totalRevenue),
+            icon: Icons.attach_money_rounded,
+            color: const Color(0xFF2DC653)),
+        StatCard(
+            title: 'Total Products',
+            value: '${stats.totalProducts}',
+            icon: Icons.inventory_2_rounded,
+            color: const Color(0xFFF4A261)),
+        StatCard(
+            title: 'Total Users',
+            value: '${stats.totalUsers}',
+            icon: Icons.people_rounded,
+            color: const Color(0xFFE63946)),
       ],
     );
   }
@@ -228,8 +242,7 @@ class _StatsShimmer extends StatelessWidget {
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
       childAspectRatio: 3.0,
-      children: List.generate(4,
-          (_) => const Card(child: SizedBox.expand())),
+      children: List.generate(4, (_) => const Card(child: SizedBox.expand())),
     );
   }
 }
@@ -246,8 +259,8 @@ class _ErrorBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(message,
-          style: TextStyle(
-              color: Theme.of(context).colorScheme.onErrorContainer)),
+          style:
+              TextStyle(color: Theme.of(context).colorScheme.onErrorContainer)),
     );
   }
 }
@@ -259,19 +272,19 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (bg, fg) = switch (status) {
-      'delivered'  => (const Color(0xFFDCFCE7), const Color(0xFF166534)),
+      'delivered' => (const Color(0xFFDCFCE7), const Color(0xFF166534)),
       'processing' => (const Color(0xFFFEF3C7), const Color(0xFF92400E)),
-      'shipped'    => (const Color(0xFFDBEAFE), const Color(0xFF1E40AF)),
-      'cancelled'  => (const Color(0xFFFEE2E2), const Color(0xFF991B1B)),
-      _            => (const Color(0xFFF3F4F6), const Color(0xFF374151)),
+      'shipped' => (const Color(0xFFDBEAFE), const Color(0xFF1E40AF)),
+      'cancelled' => (const Color(0xFFFEE2E2), const Color(0xFF991B1B)),
+      _ => (const Color(0xFFF3F4F6), const Color(0xFF374151)),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-          color: bg, borderRadius: BorderRadius.circular(20)),
+      decoration:
+          BoxDecoration(color: bg, borderRadius: BorderRadius.circular(20)),
       child: Text(status,
-          style: TextStyle(
-              fontSize: 11, fontWeight: FontWeight.w600, color: fg)),
+          style:
+              TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: fg)),
     );
   }
 }

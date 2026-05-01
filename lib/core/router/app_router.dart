@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logging/logging.dart';
 
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
@@ -11,11 +12,12 @@ import '../../features/product/presentation/pages/products_page.dart';
 import '../../features/orders/presentation/pages/orders_page.dart';
 import '../../features/layout/widgets/admin_shell.dart';
 import '../guards/unauthorized_page.dart';
+import '../logging/app_logger.dart';
 import 'app_routes.dart';
 
-final appRouterProvider = Provider<GoRouter>((ref) {
- // final notifier = ref.watch(authNotifierProvider.notifier);
+final _log = AppLogger.getLogger('Router');
 
+final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: AppRoutes.dashboard,
     refreshListenable: _AuthNotifierListenable(ref),
@@ -27,14 +29,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final onLogin = state.matchedLocation == AppRoutes.login;
 
       if (authState is AuthUnauthenticated || authState == null) {
+        if (!onLogin) {
+          _log.warning(
+              'Unauthenticated access attempt to ${state.matchedLocation}, redirecting to login');
+        }
         return onLogin ? null : AppRoutes.login;
       }
       if (authState is AuthAuthenticated && !authState.user.isAdmin) {
+        _log.warning(
+            'Non-admin user ${authState.user.email} attempted access, redirecting to login');
         return AppRoutes.login;
       }
       if (authState is AuthAuthenticated && onLogin) {
+        _log.fine(
+            'Authenticated admin on login page, redirecting to dashboard');
         return AppRoutes.dashboard;
       }
+
+      _log.fine('Route allowed: ${state.matchedLocation}');
       return null;
     },
     routes: [
@@ -68,9 +80,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ],
       ),
     ],
-    errorBuilder: (context, state) => Scaffold(
-      body: Center(child: Text('Page not found: ${state.uri}')),
-    ),
+    errorBuilder: (context, state) {
+      _log.warning('Page not found: ${state.uri}');
+      return Scaffold(
+        body: Center(child: Text('Page not found: ${state.uri}')),
+      );
+    },
   );
 });
 

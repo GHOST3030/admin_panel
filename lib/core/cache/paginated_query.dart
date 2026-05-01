@@ -1,6 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../di/providers.dart';
+import '../logging/app_logger.dart';
+
+final _log = AppLogger.getLogger('PaginatedQuery');
 
 /// Generic paginated Supabase query provider factory.
 /// Usage:
@@ -39,6 +44,10 @@ class PaginatedQuery {
     final start = page * pageSize;
     final end   = start + pageSize - 1;
 
+    _log.fine(
+        'Query table=$table, page=$page, range=$start-$end, '
+        'filters=${filters?.keys.join(",") ?? "none"}');
+
     dynamic query = client
         .from(table)
         .select(select ?? '*')
@@ -52,6 +61,9 @@ class PaginatedQuery {
     }
 
     final res = await query;
-    return List<Map<String, dynamic>>.from(res as List);
+    final rows = List<Map<String, dynamic>>.from(res as List);
+
+    _log.fine('Query table=$table returned ${rows.length} rows');
+    return rows;
   }
 }

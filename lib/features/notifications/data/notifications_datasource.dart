@@ -1,5 +1,10 @@
+import 'package:logging/logging.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../../../core/errors/exceptions.dart';
+import '../../../core/logging/app_logger.dart';
+
+final _log = AppLogger.getLogger('NotificationsDataSource');
 
 class NotificationsDataSource {
   const NotificationsDataSource(this._client);
@@ -12,6 +17,8 @@ class NotificationsDataSource {
     required String userId,
     required String newStatus,
   }) async {
+    _log.info(
+        'Triggering notification: orderId=$orderId, userId=$userId, status=$newStatus');
     try {
       final titleMap = {
         'processing': 'Order Confirmed',
@@ -34,9 +41,13 @@ class NotificationsDataSource {
         'type':      'order_status',
         'is_read':   false,
       });
+      _log.info('Notification created: orderId=$orderId, type=order_status');
     } on PostgrestException catch (e) {
+      _log.severe(
+          'Failed to create notification: orderId=$orderId, error=${e.message}', e);
       throw ServerException(message: e.message, statusCode: e.code);
-    } catch (e) {
+    } catch (e, st) {
+      _log.severe('Unexpected error creating notification: orderId=$orderId', e, st);
       throw ServerException(message: e.toString());
     }
   }

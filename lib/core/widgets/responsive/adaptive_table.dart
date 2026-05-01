@@ -30,16 +30,17 @@ class AdaptiveTable<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     if (context.isMobile) {
       return ListView.separated(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: items.length,
         separatorBuilder: (_, __) => const SizedBox(height: 8),
         itemBuilder: (_, i) => mobileCard(items[i]),
       );
     }
 
-    final isTablet   = context.isTablet;
-    final usedLabels = (isTablet && tabletColumns != null)
-        ? tabletColumns!
-        : columns;
+    final isTablet = context.isTablet;
+    final usedLabels =
+        (isTablet && tabletColumns != null) ? tabletColumns! : columns;
 
     return Card(
       child: SingleChildScrollView(
@@ -48,9 +49,7 @@ class AdaptiveTable<T> extends StatelessWidget {
           headingRowColor: WidgetStatePropertyAll(
             Theme.of(context).colorScheme.surfaceContainerLow,
           ),
-          columns: usedLabels
-              .map((l) => DataColumn(label: Text(l)))
-              .toList(),
+          columns: usedLabels.map((l) => DataColumn(label: Text(l))).toList(),
           rows: items.map((item) => desktopRow(item, isTablet)).toList(),
         ),
       ),

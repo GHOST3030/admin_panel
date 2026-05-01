@@ -1,7 +1,13 @@
 import 'dart:typed_data';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
+
 import '../../../../core/di/providers.dart';
+import '../../../../core/logging/app_logger.dart';
 import '../../data/image_upload_datasource.dart';
+
+final _log = AppLogger.getLogger('ImageUploadNotifier');
 
 final imageUploadDataSourceProvider = Provider<ImageUploadDataSource>(
   (ref) => ImageUploadDataSource(ref.watch(supabaseClientProvider)),
@@ -44,17 +50,23 @@ class ImageUploadNotifier extends StateNotifier<ImageUploadState> {
     required Uint8List bytes,
     required String mimeType,
   }) async {
+    _log.fine('Upload state: loading, path=$path');
     state = state.copyWith(isLoading: true, error: null, previewBytes: bytes);
     try {
       final url = await _dataSource.uploadImage(
           path: path, bytes: bytes, mimeType: mimeType);
+      _log.fine('Upload state: complete');
       state = state.copyWith(isLoading: false, uploadedUrl: url);
       return url;
     } catch (e) {
+      _log.severe('Upload state: error', e);
       state = state.copyWith(isLoading: false, error: e.toString());
       return null;
     }
   }
 
-  void reset() => state = const ImageUploadState();
+  void reset() {
+    _log.fine('Upload state: reset');
+    state = const ImageUploadState();
+  }
 }
