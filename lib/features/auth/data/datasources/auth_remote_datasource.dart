@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthException;
 import '../../../../core/errors/exceptions.dart';
 import '../models/admin_user_model.dart';
@@ -31,11 +30,15 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
       print('Sign in failed: ${e.message}');
       throw AuthException(message: e.message);
     } on AuthException {
-      print('Authentication error during sign in.');
+      print('Authentication error during sign in. ');
+      rethrow;
+    } on ServerException catch (e) {
+      print(
+          'Server error during sign in. Status code: ${e.statusCode}, message: ${e.message}');
       rethrow;
     } catch (e) {
       print(e.runtimeType);
-      print('Unexpected error during sign in: $e');
+      print('Unexpected error during sign in: $e.code');
       throw AuthException(message: e.toString());
     }
   }
