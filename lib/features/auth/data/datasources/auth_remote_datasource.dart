@@ -7,8 +7,10 @@ import '../models/admin_user_model.dart';
 final _log = AppLogger.getLogger('AuthDataSource');
 
 abstract interface class IAuthRemoteDataSource {
-  Future<AdminUserModel> signIn(
-      {required String email, required String password});
+  Future<AdminUserModel> signIn({
+    required String email,
+    required String password,
+  });
   Future<void> signOut();
   Future<AdminUserModel?> getCurrentUser();
 }
@@ -18,8 +20,10 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
   final SupabaseClient _client;
 
   @override
-  Future<AdminUserModel> signIn(
-      {required String email, required String password}) async {
+  Future<AdminUserModel> signIn({
+    required String email,
+    required String password,
+  }) async {
     _log.info('Sign-in attempt for email=$email');
     try {
       final response = await _client.auth.signInWithPassword(
@@ -42,7 +46,9 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
       rethrow;
     } on ServerException catch (e) {
       _log.severe(
-          'Server error during sign-in, statusCode=${e.statusCode}', e);
+        'Server error during sign-in, statusCode=${e.statusCode}',
+        e,
+      );
       rethrow;
     } catch (e, st) {
       _log.severe('Unexpected error during sign-in: ${e.runtimeType}', e, st);

@@ -55,6 +55,7 @@ class PaginatedQuery {
 
     if (filters != null) {
       for (final entry in filters.entries) {
+       // ignore: avoid_dynamic_calls
        query = query.eq(entry.key, entry.value);
       }
     }

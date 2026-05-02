@@ -11,17 +11,30 @@ import '../../auth/presentation/states/auth_state.dart';
 
 // ── Nav item model ────────────────────────────────────────────
 class _NavItem {
-  const _NavItem({required this.icon, required this.label, required this.route});
+  const _NavItem(
+      {required this.icon, required this.label, required this.route,});
   final IconData icon;
   final String label;
   final String route;
 }
 
 const _navItems = [
-  _NavItem(icon: Icons.dashboard_rounded,   label: 'Dashboard',  route: AppRoutes.dashboard),
-  _NavItem(icon: Icons.category_rounded,    label: 'Categories', route: AppRoutes.categories),
-  _NavItem(icon: Icons.inventory_2_rounded, label: 'Products',   route: AppRoutes.products),
-  _NavItem(icon: Icons.receipt_long_rounded,label: 'Orders',     route: AppRoutes.orders),
+  _NavItem(
+      icon: Icons.dashboard_rounded,
+      label: 'Dashboard',
+      route: AppRoutes.dashboard,),
+  _NavItem(
+      icon: Icons.category_rounded,
+      label: 'Categories',
+      route: AppRoutes.categories,),
+  _NavItem(
+      icon: Icons.inventory_2_rounded,
+      label: 'Products',
+      route: AppRoutes.products,),
+  _NavItem(
+      icon: Icons.receipt_long_rounded,
+      label: 'Orders',
+      route: AppRoutes.orders,),
 ];
 
 // ── Provider for sidebar collapsed state ──────────────────────
@@ -127,7 +140,7 @@ class _MobileShell extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
       drawer: const _DrawerSidebar(),
-      appBar: _Topbar(showDrawerMenu: true),
+      appBar: const _Topbar(showDrawerMenu: true),
       body: child,
     );
   }
@@ -143,9 +156,8 @@ class _Sidebar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).matchedLocation;
-    final width = collapsed
-        ? Breakpoints.sidebarCollapsed
-        : Breakpoints.sidebarWidth;
+    final width =
+        collapsed ? Breakpoints.sidebarCollapsed : Breakpoints.sidebarWidth;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 220),
@@ -155,7 +167,7 @@ class _Sidebar extends ConsumerWidget {
         color: AppTheme.sidebarColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 8,
             offset: const Offset(2, 0),
           ),
@@ -170,13 +182,15 @@ class _Sidebar extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               children: _navItems
-                  .map((item) => _SidebarTile(
-                        item: item,
-                        collapsed: collapsed,
-                        selected: location == item.route ||
-                            (item.route != AppRoutes.dashboard &&
-                                location.startsWith(item.route)),
-                      ))
+                  .map(
+                    (item) => _SidebarTile(
+                      item: item,
+                      collapsed: collapsed,
+                      selected: location == item.route ||
+                          (item.route != AppRoutes.dashboard &&
+                              location.startsWith(item.route)),
+                    ),
+                  )
                   .toList(),
             ),
           ),
@@ -200,21 +214,32 @@ class _SidebarHeader extends StatelessWidget {
         duration: const Duration(milliseconds: 180),
         child: collapsed
             ? const Center(
-                child: Icon(Icons.admin_panel_settings_rounded,
-                    color: Colors.white, size: 28),
+                child: Icon(
+                  Icons.admin_panel_settings_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
               )
             : const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Row(children: [
-                  Icon(Icons.admin_panel_settings_rounded,
-                      color: Colors.white70, size: 22),
-                  SizedBox(width: 10),
-                  Text('Admin Panel',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.admin_panel_settings_rounded,
+                      color: Colors.white70,
+                      size: 22,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'Admin Panel',
                       style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15)),
-                ]),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
+                ),
               ),
       ),
     );
@@ -234,10 +259,9 @@ class _SidebarTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color =
-        selected ? Colors.white : Colors.white.withOpacity(0.65);
-    final bg = selected
-        ? Colors.white.withOpacity(0.12)
-        : Colors.transparent;
+        selected ? Colors.white : Colors.white.withValues(alpha: 0.65);
+    final bg =
+        selected ? Colors.white.withValues(alpha: 0.12) : Colors.transparent;
 
     return Tooltip(
       message: collapsed ? item.label : '',
@@ -258,16 +282,20 @@ class _SidebarTile extends StatelessWidget {
           ),
           child: collapsed
               ? Center(child: Icon(item.icon, color: color, size: 22))
-              : Row(children: [
-                  Icon(item.icon, color: color, size: 20),
-                  const SizedBox(width: 12),
-                  Text(item.label,
+              : Row(
+                  children: [
+                    Icon(item.icon, color: color, size: 20),
+                    const SizedBox(width: 12),
+                    Text(
+                      item.label,
                       style: TextStyle(
-                          color: color,
-                          fontWeight: selected
-                              ? FontWeight.w600
-                              : FontWeight.normal)),
-                ]),
+                        color: color,
+                        fontWeight:
+                            selected ? FontWeight.w600 : FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
         ),
       ),
     );
@@ -292,14 +320,22 @@ class _SidebarSignOut extends StatelessWidget {
           ),
           child: collapsed
               ? const Center(
-                  child: Icon(Icons.logout_rounded,
-                      color: Colors.white60, size: 20))
-              : const Row(children: [
-                  Icon(Icons.logout_rounded, color: Colors.white60, size: 18),
-                  SizedBox(width: 12),
-                  Text('Sign Out',
-                      style: TextStyle(color: Colors.white60, fontSize: 13)),
-                ]),
+                  child: Icon(
+                    Icons.logout_rounded,
+                    color: Colors.white60,
+                    size: 20,
+                  ),
+                )
+              : const Row(
+                  children: [
+                    Icon(Icons.logout_rounded, color: Colors.white60, size: 18),
+                    SizedBox(width: 12),
+                    Text(
+                      'Sign Out',
+                      style: TextStyle(color: Colors.white60, fontSize: 13),
+                    ),
+                  ],
+                ),
         ),
       ),
     );
@@ -322,36 +358,48 @@ class _DrawerSidebar extends ConsumerWidget {
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(color: Colors.transparent),
-            child: Row(children: [
-              Icon(Icons.admin_panel_settings_rounded,
-                  color: Colors.white, size: 28),
-              SizedBox(width: 12),
-              Text('Admin Panel',
+            child: Row(
+              children: [
+                Icon(
+                  Icons.admin_panel_settings_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
+                SizedBox(width: 12),
+                Text(
+                  'Admin Panel',
                   style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16)),
-            ]),
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               children: _navItems
-                  .map((item) => _SidebarTile(
-                        item: item,
-                        collapsed: false,
-                        selected: location == item.route ||
-                            (item.route != AppRoutes.dashboard &&
-                                location.startsWith(item.route)),
-                      ))
+                  .map(
+                    (item) => _SidebarTile(
+                      item: item,
+                      collapsed: false,
+                      selected: location == item.route ||
+                          (item.route != AppRoutes.dashboard &&
+                              location.startsWith(item.route)),
+                    ),
+                  )
                   .toList(),
             ),
           ),
           const Divider(color: Colors.white24),
           ListTile(
             leading: const Icon(Icons.logout_rounded, color: Colors.white60),
-            title: const Text('Sign Out',
-                style: TextStyle(color: Colors.white60)),
+            title: const Text(
+              'Sign Out',
+              style: TextStyle(color: Colors.white60),
+            ),
             onTap: () {
               Navigator.pop(context);
               ref.read(authNotifierProvider.notifier).signOut();
@@ -384,9 +432,8 @@ class _Topbar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authNotifierProvider).valueOrNull;
-    final userEmail = authState is AuthAuthenticated
-        ? authState.user.email
-        : '';
+    final userEmail =
+        authState is AuthAuthenticated ? authState.user.email : '';
 
     return Container(
       height: 64,
@@ -416,9 +463,13 @@ class _Topbar extends ConsumerWidget implements PreferredSizeWidget {
             ),
           const Spacer(),
           if (!compact) ...[
-            Text(userEmail,
-                style: Theme.of(context).textTheme.bodySmall
-                    ?.copyWith(color: Theme.of(context).colorScheme.outline)),
+            Text(
+              userEmail,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: Theme.of(context).colorScheme.outline),
+            ),
             const SizedBox(width: 16),
           ],
           CircleAvatar(
@@ -427,8 +478,9 @@ class _Topbar extends ConsumerWidget implements PreferredSizeWidget {
             child: Text(
               userEmail.isNotEmpty ? userEmail[0].toUpperCase() : 'A',
               style: TextStyle(
-                  fontSize: 13,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer),
+                fontSize: 13,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
             ),
           ),
           const SizedBox(width: 8),

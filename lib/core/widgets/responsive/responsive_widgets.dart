@@ -1,4 +1,3 @@
-/// Single import for all responsive widgets.
 export 'adaptive_grid.dart';
 export 'adaptive_scaffold.dart';
 export 'adaptive_table.dart';

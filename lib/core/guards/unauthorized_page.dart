@@ -18,7 +18,7 @@ class UnauthorizedPage extends ConsumerWidget {
             const Icon(Icons.lock_outline, size: 80, color: Colors.red),
             const SizedBox(height: 16),
             Text('Access Denied',
-                style: Theme.of(context).textTheme.headlineMedium),
+            style: Theme.of(context).textTheme.headlineMedium,),
             const SizedBox(height: 8),
             const Text('You do not have admin privileges.'),
             const SizedBox(height: 24),

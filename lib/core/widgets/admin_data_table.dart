@@ -80,7 +80,7 @@ class _AdminDataTableState<T> extends State<AdminDataTable<T>> {
                         });
                         widget.onSort!(i, asc);
                       },
-              )).toList(),
+              ),).toList(),
               rows: _pageRows,
             ),
           ),
@@ -93,7 +93,7 @@ class _AdminDataTableState<T> extends State<AdminDataTable<T>> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text('${_currentPage + 1} / $_totalPages',
-                  style: Theme.of(context).textTheme.bodySmall),
+                  style: Theme.of(context).textTheme.bodySmall,),
               const SizedBox(width: 12),
               IconButton(
                 icon: const Icon(Icons.chevron_left),

@@ -35,10 +35,12 @@ final dashboardStatsProvider = FutureProvider<DashboardStats>((ref) async {
     final usersCount = results[3] as int;
 
     final revenue = revenueRes.fold<double>(
-        0, (sum, row) => sum + ((row['total_amount'] as num?)?.toDouble() ?? 0));
+      0,
+      // ignore: avoid_dynamic_calls
+      (sum, row) => sum + ((row['total_amount'] as num?)?.toDouble() ?? 0),
+    );
 
-    _log.info(
-        'Dashboard stats loaded: orders=$ordersCount, revenue=$revenue, '
+    _log.info('Dashboard stats loaded: orders=$ordersCount, revenue=$revenue, '
         'products=$productsCount, users=$usersCount');
 
     return DashboardStats(

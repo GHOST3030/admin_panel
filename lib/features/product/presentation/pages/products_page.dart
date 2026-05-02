@@ -18,7 +18,7 @@ class ProductsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state    = ref.watch(productNotifierProvider);
+    final state = ref.watch(productNotifierProvider);
     final currency = NumberFormat.currency(symbol: '\$');
 
     return AdaptiveScaffold(
@@ -35,79 +35,122 @@ class ProductsPage extends ConsumerWidget {
       ),
       body: state.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error:   (e, _) => Center(child: Text('$e')),
+        error: (e, _) => Center(child: Text('$e')),
         data: (s) => switch (s) {
-          ProductError()   => Center(child: Text(s.message)),
+          ProductError() => Center(child: Text(s.message)),
           ProductLoading() => const Center(child: CircularProgressIndicator()),
           ProductInitial() => const SizedBox.shrink(),
-          ProductLoaded()  => ResponsivePadding(
-            child: AdaptiveTable<Map<String, dynamic>>(
-              columns: const [
-                'Name', 'Category', 'Price', 'Discount', 'Featured', 'Active', 'Actions',
-              ],
-              tabletColumns: const ['Name', 'Price', 'Active', 'Actions'],
-              items: s.products,
-              desktopRow: (p, isTablet) {
-                final cells = isTablet
-                    ? [
-                        DataCell(Text(p['name_en'] as String? ?? '')),
-                        DataCell(Text(currency.format(
-                            (p['base_price'] as num?)?.toDouble() ?? 0),),),
-                        DataCell(_ActiveBadge(p['is_active'] as bool? ?? false)),
-                        DataCell(_RowActions(
-                          onEdit: () => _showForm(context, ref, p),
-                          onDelete: () => ref
-                              .read(productNotifierProvider.notifier)
-                              .deactivate(p['id'] as String),
-                        )),
-                      ]
-                    : [
-                        DataCell(Text(p['name_en'] as String? ?? '',
-                            overflow: TextOverflow.ellipsis)),
-                        DataCell(Text(
-                          ((p['categories'] as Map?)?['name_en'] as String?) ?? '—',
-                        )),
-                        DataCell(Text(currency.format(
-                            (p['base_price'] as num?)?.toDouble() ?? 0))),
-                        DataCell(Text(p['discount_price'] != null
-                            ? currency.format(
-                                (p['discount_price'] as num).toDouble())
-                            : '—')),
-                        DataCell(Icon(
-                          (p['is_featured'] as bool? ?? false)
-                              ? Icons.star_rounded
-                              : Icons.star_border_rounded,
-                          size: 18,
-                          color: (p['is_featured'] as bool? ?? false)
-                              ? Colors.amber
-                              : Colors.grey,
-                        )),
-                        DataCell(_ActiveBadge(p['is_active'] as bool? ?? false)),
-                        DataCell(_RowActions(
-                          onEdit: () => _showForm(context, ref, p),
-                          onDelete: () => ref
-                              .read(productNotifierProvider.notifier)
-                              .deactivate(p['id'] as String),
-                        )),
-                      ];
-                return DataRow(cells: cells);
-              },
-              mobileCard: (p) => _ProductCard(
-                product: p,
-                currency: currency,
-                onEdit: () => _showForm(context, ref, p),
-                onDelete: () => ref
-                    .read(productNotifierProvider.notifier)
-                    .deactivate(p['id'] as String),
+          ProductLoaded() => ResponsivePadding(
+              child: AdaptiveTable<Map<String, dynamic>>(
+                columns: const [
+                  'Name',
+                  'Category',
+                  'Price',
+                  'Discount',
+                  'Featured',
+                  'Active',
+                  'Actions',
+                ],
+                tabletColumns: const ['Name', 'Price', 'Active', 'Actions'],
+                items: s.products,
+                desktopRow: (p, isTablet) {
+                  final cells = isTablet
+                      ? [
+                          DataCell(Text(p['name_en'] as String? ?? '')),
+                          DataCell(
+                            Text(
+                              currency.format(
+                                (p['base_price'] as num?)?.toDouble() ?? 0,
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            _ActiveBadge(p['is_active'] as bool? ?? false),
+                          ),
+                          DataCell(
+                            _RowActions(
+                              onEdit: () => _showForm(context, ref, p),
+                              onDelete: () => ref
+                                  .read(productNotifierProvider.notifier)
+                                  .deactivate(p['id'] as String),
+                            ),
+                          ),
+                        ]
+                      : [
+                          DataCell(
+                            Text(
+                              p['name_en'] as String? ?? '',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              ((p['categories'] as Map?)?['name_en']
+                                      as String?) ??
+                                  '—',
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              currency.format(
+                                (p['base_price'] as num?)?.toDouble() ?? 0,
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              p['discount_price'] != null
+                                  ? currency.format(
+                                      (p['discount_price'] as num).toDouble(),
+                                    )
+                                  : '—',
+                            ),
+                          ),
+                          DataCell(
+                            Icon(
+                              (p['is_featured'] as bool? ?? false)
+                                  ? Icons.star_rounded
+                                  : Icons.star_border_rounded,
+                              size: 18,
+                              color: (p['is_featured'] as bool? ?? false)
+                                  ? Colors.amber
+                                  : Colors.grey,
+                            ),
+                          ),
+                          DataCell(
+                            _ActiveBadge(p['is_active'] as bool? ?? false),
+                          ),
+                          DataCell(
+                            _RowActions(
+                              onEdit: () => _showForm(context, ref, p),
+                              onDelete: () => ref
+                                  .read(productNotifierProvider.notifier)
+                                  .deactivate(p['id'] as String),
+                            ),
+                          ),
+                        ];
+                  return DataRow(cells: cells);
+                },
+                mobileCard: (p) => _ProductCard(
+                  product: p,
+                  currency: currency,
+                  onEdit: () => _showForm(context, ref, p),
+                  onDelete: () => ref
+                      .read(productNotifierProvider.notifier)
+                      .deactivate(p['id'] as String),
+                ),
               ),
             ),
-          ),
         },
       ),
     );
   }
 
-  void _showForm(BuildContext ctx, WidgetRef ref, Map<String, dynamic>? existing) {
+  void _showForm(
+    BuildContext ctx,
+    WidgetRef ref,
+    Map<String, dynamic>? existing,
+  ) {
     showDialog(
       context: ctx,
       builder: (_) => _ProductFormDialog(existing: existing, ref: ref),
@@ -140,9 +183,11 @@ class _ProductCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: Text(product['name_en'] as String? ?? '',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    product['name_en'] as String? ?? '',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 _ActiveBadge(product['is_active'] as bool? ?? false),
               ],
@@ -150,10 +195,13 @@ class _ProductCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               currency.format(
-                  (product['base_price'] as num?)?.toDouble() ?? 0),
+                (product['base_price'] as num?)?.toDouble() ?? 0,
+              ),
               style: const TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.w600,
-                  color: Color(0xFF4361EE)),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF4361EE),
+              ),
             ),
             const SizedBox(height: 12),
             Row(
@@ -188,18 +236,21 @@ class _RowActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisSize: MainAxisSize.min, children: [
-      IconButton(
-        icon: const Icon(Icons.edit_outlined, size: 18),
-        tooltip: 'Edit',
-        onPressed: onEdit,
-      ),
-      IconButton(
-        icon: const Icon(Icons.delete_outline, size: 18, color: Colors.red),
-        tooltip: 'Deactivate',
-        onPressed: onDelete,
-      ),
-    ]);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.edit_outlined, size: 18),
+          tooltip: 'Edit',
+          onPressed: onEdit,
+        ),
+        IconButton(
+          icon: const Icon(Icons.delete_outline, size: 18, color: Colors.red),
+          tooltip: 'Deactivate',
+          onPressed: onDelete,
+        ),
+      ],
+    );
   }
 }
 
@@ -213,9 +264,7 @@ class _ActiveBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: active
-            ? const Color(0xFFDCFCE7)
-            : const Color(0xFFFEE2E2),
+        color: active ? const Color(0xFFDCFCE7) : const Color(0xFFFEE2E2),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
@@ -242,18 +291,33 @@ class _ProductFormDialog extends StatefulWidget {
 
 class _ProductFormDialogState extends State<_ProductFormDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final _nameEn   = TextEditingController(text: widget.existing?['name_en']   as String?);
-  late final _nameAr   = TextEditingController(text: widget.existing?['name_ar']   as String?);
-  late final _descEn   = TextEditingController(text: widget.existing?['description_en'] as String?);
-  late final _descAr   = TextEditingController(text: widget.existing?['description_ar'] as String?);
-  late final _price    = TextEditingController(text: '${widget.existing?['base_price'] ?? ''}');
-  late final _discount = TextEditingController(text: '${widget.existing?['discount_price'] ?? ''}');
-  late final _catId    = TextEditingController(text: widget.existing?['category_id'] as String?);
+  late final _nameEn =
+      TextEditingController(text: widget.existing?['name_en'] as String?);
+  late final _nameAr =
+      TextEditingController(text: widget.existing?['name_ar'] as String?);
+  late final _descEn = TextEditingController(
+    text: widget.existing?['description_en'] as String?,
+  );
+  late final _descAr = TextEditingController(
+    text: widget.existing?['description_ar'] as String?,
+  );
+  late final _price =
+      TextEditingController(text: '${widget.existing?['base_price'] ?? ''}');
+  late final _discount = TextEditingController(
+    text: '${widget.existing?['discount_price'] ?? ''}',
+  );
+  late final _catId =
+      TextEditingController(text: widget.existing?['category_id'] as String?);
 
   @override
   void dispose() {
-    _nameEn.dispose(); _nameAr.dispose(); _descEn.dispose();
-    _descAr.dispose(); _price.dispose(); _discount.dispose(); _catId.dispose();
+    _nameEn.dispose();
+    _nameAr.dispose();
+    _descEn.dispose();
+    _descAr.dispose();
+    _price.dispose();
+    _discount.dispose();
+    _catId.dispose();
     super.dispose();
   }
 
@@ -266,7 +330,8 @@ class _ProductFormDialogState extends State<_ProductFormDialog> {
       if (_descEn.text.isNotEmpty) 'description_en': _descEn.text.trim(),
       if (_descAr.text.isNotEmpty) 'description_ar': _descAr.text.trim(),
       'base_price': double.tryParse(_price.text) ?? 0,
-      if (_discount.text.isNotEmpty) 'discount_price': double.tryParse(_discount.text),
+      if (_discount.text.isNotEmpty)
+        'discount_price': double.tryParse(_discount.text),
       'category_id': _catId.text.trim(),
       'is_active': true,
     };
@@ -290,30 +355,39 @@ class _ProductFormDialogState extends State<_ProductFormDialog> {
             formKey: _formKey,
             fields: [
               AdminFormField(
-                controller: _nameEn, label: 'Name (EN)',
+                controller: _nameEn,
+                label: 'Name (EN)',
                 validator: Validators.required,
               ),
               AdminFormField(
-                controller: _nameAr, label: 'Name (AR)',
+                controller: _nameAr,
+                label: 'Name (AR)',
                 validator: Validators.required,
               ),
               AdminFormField(
-                controller: _descEn, label: 'Description (EN)', maxLines: 2,
+                controller: _descEn,
+                label: 'Description (EN)',
+                maxLines: 2,
               ),
               AdminFormField(
-                controller: _descAr, label: 'Description (AR)', maxLines: 2,
+                controller: _descAr,
+                label: 'Description (AR)',
+                maxLines: 2,
               ),
               AdminFormField(
-                controller: _price, label: 'Base Price',
+                controller: _price,
+                label: 'Base Price',
                 keyboardType: TextInputType.number,
                 validator: Validators.positiveNumber,
               ),
               AdminFormField(
-                controller: _discount, label: 'Discount Price (optional)',
+                controller: _discount,
+                label: 'Discount Price (optional)',
                 keyboardType: TextInputType.number,
               ),
               AdminFormField(
-                controller: _catId, label: 'Category ID',
+                controller: _catId,
+                label: 'Category ID',
                 validator: Validators.required,
               ),
             ],

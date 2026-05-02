@@ -29,7 +29,7 @@ class StatCard extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color, size: 24),
@@ -40,39 +40,48 @@ class StatCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(title,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: const Color(0xFF6B7280),
-                            fontWeight: FontWeight.w500,
-                          ),
-                      overflow: TextOverflow.ellipsis),
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: const Color(0xFF6B7280),
+                          fontWeight: FontWeight.w500,
+                        ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   const SizedBox(height: 4),
-                  Text(value,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF111827),
-                          ),
-                      overflow: TextOverflow.ellipsis),
+                  Text(
+                    value,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF111827),
+                        ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   if (trend != null) ...[
                     const SizedBox(height: 2),
-                    Row(children: [
-                      Icon(
-                        trendPositive == true
-                            ? Icons.trending_up
-                            : Icons.trending_down,
-                        size: 12,
-                        color: trendPositive == true
-                            ? const Color(0xFF2DC653)
-                            : const Color(0xFFE63946),
-                      ),
-                      const SizedBox(width: 3),
-                      Text(trend!,
+                    Row(
+                      children: [
+                        Icon(
+                          trendPositive == true
+                              ? Icons.trending_up
+                              : Icons.trending_down,
+                          size: 12,
+                          color: trendPositive == true
+                              ? const Color(0xFF2DC653)
+                              : const Color(0xFFE63946),
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          trend!,
                           style: TextStyle(
-                              fontSize: 11,
-                              color: trendPositive == true
-                                  ? const Color(0xFF2DC653)
-                                  : const Color(0xFFE63946))),
-                    ]),
+                            fontSize: 11,
+                            color: trendPositive == true
+                                ? const Color(0xFF2DC653)
+                                : const Color(0xFFE63946),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ],
               ),

@@ -38,7 +38,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           content: Text(v.message),
           backgroundColor: Theme.of(context).colorScheme.error,
           behavior: SnackBarBehavior.floating,
-        ));
+        ),);
       }
     });
 
@@ -67,19 +67,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: const Icon(Icons.admin_panel_settings_rounded,
-                              color: Colors.white, size: 28),
+                              color: Colors.white, size: 28,),
                         ),
-                      ]),
+                      ],),
                       const SizedBox(height: 20),
                       Text('Welcome back',
                           style: Theme.of(context).textTheme.headlineSmall
                               ?.copyWith(fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center),
+                          textAlign: TextAlign.center,),
                       const SizedBox(height: 6),
                       Text('Sign in to your admin account',
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: const Color(0xFF6B7280)),
-                          textAlign: TextAlign.center),
+                          textAlign: TextAlign.center,),
                       const SizedBox(height: 32),
 
                       AuthTextField(
@@ -96,7 +96,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         suffixIcon: IconButton(
                           icon: Icon(_obscure
                               ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined),
+                              : Icons.visibility_outlined,),
                           onPressed: () => setState(() => _obscure = !_obscure),
                         ),
                       ),
@@ -108,9 +108,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           child: isLoading
                               ? const SizedBox(width: 20, height: 20,
                                   child: CircularProgressIndicator(
-                                      strokeWidth: 2, color: Colors.white))
+                                      strokeWidth: 2, color: Colors.white,),)
                               : const Text('Sign In',
-                                  style: TextStyle(fontWeight: FontWeight.w600)),
+                                  style: TextStyle(fontWeight: FontWeight.w600),),
                         ),
                       ),
                     ],

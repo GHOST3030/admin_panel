@@ -18,8 +18,8 @@ class ResponsiveBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (context.screenType) {
-      ScreenType.mobile  => mobile(context),
-      ScreenType.tablet  => (tablet ?? desktop)(context),
+      ScreenType.mobile => mobile(context),
+      ScreenType.tablet => (tablet ?? desktop)(context),
       ScreenType.desktop => desktop(context),
     };
   }

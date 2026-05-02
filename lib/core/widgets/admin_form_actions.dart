@@ -17,17 +17,20 @@ class AdminFormActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-    mainAxisAlignment: MainAxisAlignment.end,
-    children: [
-      TextButton(onPressed: onCancel, child: const Text('Cancel')),
-      const SizedBox(width: 12),
-      FilledButton(
-        onPressed: isLoading ? null : onSubmit,
-        child: isLoading
-            ? const SizedBox(width: 16, height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2))
-            : Text(submitLabel),
-      ),
-    ],
-  );
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          TextButton(onPressed: onCancel, child: const Text('Cancel')),
+          const SizedBox(width: 12),
+          FilledButton(
+            onPressed: isLoading ? null : onSubmit,
+            child: isLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Text(submitLabel),
+          ),
+        ],
+      );
 }

@@ -12,7 +12,7 @@ abstract final class SupabaseInitializer {
 
     assert(AppConstants.supabaseUrl.isNotEmpty, 'SUPABASE_URL is missing.');
     assert(AppConstants.supabaseAnonKey.isNotEmpty,
-        'SUPABASE_ANON_KEY is missing.');
+        'SUPABASE_ANON_KEY is missing.',);
 
     try {
       await Supabase.initialize(

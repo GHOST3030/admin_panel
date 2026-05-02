@@ -36,16 +36,19 @@ class _TwoColumnLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final rows = <Widget>[];
     for (var i = 0; i < fields.length; i += 2) {
-      final left  = fields[i];
-      final right = (i + 1 < fields.length) ? fields[i + 1] : const SizedBox.shrink();
-      rows.add(Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(child: left),
-          SizedBox(width: spacing),
-          Expanded(child: right),
-        ],
-      ));
+      final left = fields[i];
+      final right =
+          (i + 1 < fields.length) ? fields[i + 1] : const SizedBox.shrink();
+      rows.add(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: left),
+            SizedBox(width: spacing),
+            Expanded(child: right),
+          ],
+        ),
+      );
       if (i + 2 < fields.length) rows.add(SizedBox(height: spacing));
     }
     return Column(
@@ -64,9 +67,7 @@ class _SingleColumnLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: fields
-          .expand((f) => [f, SizedBox(height: spacing)])
-          .toList()
+      children: fields.expand((f) => [f, SizedBox(height: spacing)]).toList()
         ..removeLast(),
     );
   }

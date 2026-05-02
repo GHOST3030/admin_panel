@@ -53,7 +53,7 @@ class DashboardPage extends ConsumerWidget {
 
                   ordersAsync.when(
                     loading: () => const Center(
-                        heightFactor: 3, child: CircularProgressIndicator()),
+                        heightFactor: 3, child: CircularProgressIndicator(),),
                     error: (e, _) => _ErrorBanner('$e'),
                     data: (orders) => AdaptiveTable<Map<String, dynamic>>(
                       columns: const [
@@ -75,29 +75,29 @@ class DashboardPage extends ConsumerWidget {
                         final cells = isTablet
                             ? [
                                 DataCell(
-                                    Text((o['id'] as String).substring(0, 8))),
+                                    Text((o['id'] as String).substring(0, 8)),),
                                 DataCell(
-                                    _StatusChip(o['status'] as String? ?? '')),
+                                    _StatusChip(o['status'] as String? ?? ''),),
                                 DataCell(Text(currency.format(
                                     (o['total_amount'] as num?)?.toDouble() ??
-                                        0))),
+                                        0,),),),
                               ]
                             : [
                                 DataCell(
-                                    Text((o['id'] as String).substring(0, 8))),
+                                    Text((o['id'] as String).substring(0, 8)),),
                                 DataCell(Text(
                                   ((o['users'] as Map?)?['email'] as String?) ??
                                       '—',
                                   overflow: TextOverflow.ellipsis,
-                                )),
+                                ),),
                                 DataCell(
-                                    _StatusChip(o['status'] as String? ?? '')),
+                                    _StatusChip(o['status'] as String? ?? ''),),
                                 DataCell(Text(currency.format(
                                     (o['total_amount'] as num?)?.toDouble() ??
-                                        0))),
+                                        0,),),),
                                 DataCell(Text(date != null
                                     ? DateFormat('MMM d, yyyy').format(date)
-                                    : '—')),
+                                    : '—',),),
                               ];
                         return DataRow(cells: cells);
                       },
@@ -117,7 +117,7 @@ class DashboardPage extends ConsumerWidget {
                                     Text(
                                       '#${(o['id'] as String).substring(0, 8)}',
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,),
                                     ),
                                     _StatusChip(o['status'] as String? ?? ''),
                                   ],
@@ -137,9 +137,9 @@ class DashboardPage extends ConsumerWidget {
                                         currency.format(
                                             (o['total_amount'] as num?)
                                                     ?.toDouble() ??
-                                                0),
+                                                0,),
                                         style: const TextStyle(
-                                            fontWeight: FontWeight.w600)),
+                                            fontWeight: FontWeight.w600,),),
                                     Text(
                                       date != null
                                           ? DateFormat('MMM d').format(date)
@@ -188,22 +188,22 @@ class _StatsGrid extends StatelessWidget {
             title: 'Total Orders',
             value: '${stats.totalOrders}',
             icon: Icons.receipt_long_rounded,
-            color: const Color(0xFF4361EE)),
+            color: const Color(0xFF4361EE),),
         StatCard(
             title: 'Total Revenue',
             value: currency.format(stats.totalRevenue),
             icon: Icons.attach_money_rounded,
-            color: const Color(0xFF2DC653)),
+            color: const Color(0xFF2DC653),),
         StatCard(
             title: 'Total Products',
             value: '${stats.totalProducts}',
             icon: Icons.inventory_2_rounded,
-            color: const Color(0xFFF4A261)),
+            color: const Color(0xFFF4A261),),
         StatCard(
             title: 'Total Users',
             value: '${stats.totalUsers}',
             icon: Icons.people_rounded,
-            color: const Color(0xFFE63946)),
+            color: const Color(0xFFE63946),),
       ],
     );
   }
@@ -224,7 +224,7 @@ class _SectionHeader extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold)),
+                ?.copyWith(fontWeight: FontWeight.bold),),
         if (action != null) action!,
       ],
     );
@@ -260,7 +260,7 @@ class _ErrorBanner extends StatelessWidget {
       ),
       child: Text(message,
           style:
-              TextStyle(color: Theme.of(context).colorScheme.onErrorContainer)),
+              TextStyle(color: Theme.of(context).colorScheme.onErrorContainer),),
     );
   }
 }
@@ -284,7 +284,7 @@ class _StatusChip extends StatelessWidget {
           BoxDecoration(color: bg, borderRadius: BorderRadius.circular(20)),
       child: Text(status,
           style:
-              TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: fg)),
+              TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: fg),),
     );
   }
 }

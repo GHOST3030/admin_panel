@@ -30,18 +30,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       if (authState is AuthUnauthenticated || authState == null) {
         if (!onLogin) {
           _log.warning(
-              'Unauthenticated access attempt to ${state.matchedLocation}, redirecting to login');
+              'Unauthenticated access attempt to ${state.matchedLocation}, redirecting to login',);
         }
         return onLogin ? null : AppRoutes.login;
       }
       if (authState is AuthAuthenticated && !authState.user.isAdmin) {
         _log.warning(
-            'Non-admin user ${authState.user.email} attempted access, redirecting to login');
+            'Non-admin user ${authState.user.email} attempted access, redirecting to login',);
         return AppRoutes.login;
       }
       if (authState is AuthAuthenticated && onLogin) {
         _log.fine(
-            'Authenticated admin on login page, redirecting to dashboard');
+            'Authenticated admin on login page, redirecting to dashboard',);
         return AppRoutes.dashboard;
       }
 
@@ -90,7 +90,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
 /// Bridges Riverpod state changes to GoRouter's [Listenable] refresh.
 class _AuthNotifierListenable extends ChangeNotifier {
-  _AuthNotifierListenable(ProviderRef ref) {
+  _AuthNotifierListenable(ref) {
+    // ignore: avoid_dynamic_calls
     ref.listen(authNotifierProvider, (_, __) => notifyListeners());
   }
 }

@@ -30,13 +30,17 @@ class AdminFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => TextFormField(
-    controller: controller,
-    decoration: InputDecoration(labelText: label, hintText: hint, suffixIcon: suffixIcon),
-    validator: validator,
-    maxLines: maxLines,
-    keyboardType: keyboardType,
-    inputFormatters: inputFormatters,
-    obscureText: obscureText,
-    enabled: enabled,
-  );
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          suffixIcon: suffixIcon,
+        ),
+        validator: validator,
+        maxLines: maxLines,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
+        obscureText: obscureText,
+        enabled: enabled,
+      );
 }

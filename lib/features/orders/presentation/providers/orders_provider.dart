@@ -17,7 +17,9 @@ class OrdersNotifier extends AsyncNotifier<OrdersState> {
   }
 
   Future<void> loadAll({String? statusFilter}) async {
-    _log.fine('Loading orders${statusFilter != null ? ", statusFilter=$statusFilter" : ""}');
+    _log.fine(
+      'Loading orders${statusFilter != null ? ", statusFilter=$statusFilter" : ""}',
+    );
     state = const AsyncLoading();
     try {
       final client = ref.read(supabaseClientProvider);
@@ -25,6 +27,7 @@ class OrdersNotifier extends AsyncNotifier<OrdersState> {
           .from('orders')
           .select('*, users(email, full_name)')
           .order('created_at', ascending: false);
+      // ignore: avoid_dynamic_calls
       if (statusFilter != null) query = query.eq('status', statusFilter);
       final res = await query;
       final list = List<Map<String, dynamic>>.from(res as List);
@@ -40,7 +43,9 @@ class OrdersNotifier extends AsyncNotifier<OrdersState> {
     _log.info('Updating order status: orderId=$orderId, newStatus=$newStatus');
     try {
       final client = ref.read(supabaseClientProvider);
-      await client.from('orders').update({'status': newStatus}).eq('id', orderId);
+      await client
+          .from('orders')
+          .update({'status': newStatus}).eq('id', orderId);
       _log.info('Order status updated: orderId=$orderId, status=$newStatus');
       await loadAll();
     } catch (e, st) {

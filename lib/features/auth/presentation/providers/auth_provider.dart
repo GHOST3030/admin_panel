@@ -13,14 +13,20 @@ import '../states/auth_state.dart';
 final _log = AppLogger.getLogger('AuthNotifier');
 
 final _authDataSourceProvider = Provider<IAuthRemoteDataSource>(
-  (ref) => AuthRemoteDataSource(ref.watch(supabaseClientProvider)));
+  (ref) => AuthRemoteDataSource(ref.watch(supabaseClientProvider)),
+);
 
 final _authRepositoryProvider = Provider<IAuthRepository>(
-  (ref) => AuthRepositoryImpl(ref.watch(_authDataSourceProvider)));
+  (ref) => AuthRepositoryImpl(ref.watch(_authDataSourceProvider)),
+);
 
-final _signInUseCaseProvider   = Provider((ref) => SignInUseCase(ref.watch(_authRepositoryProvider)));
-final _signOutUseCaseProvider  = Provider((ref) => SignOutUseCase(ref.watch(_authRepositoryProvider)));
-final _getCurrentUserProvider  = Provider((ref) => GetCurrentUserUseCase(ref.watch(_authRepositoryProvider)));
+final _signInUseCaseProvider =
+    Provider((ref) => SignInUseCase(ref.watch(_authRepositoryProvider)));
+final _signOutUseCaseProvider =
+    Provider((ref) => SignOutUseCase(ref.watch(_authRepositoryProvider)));
+final _getCurrentUserProvider = Provider(
+  (ref) => GetCurrentUserUseCase(ref.watch(_authRepositoryProvider)),
+);
 
 final authNotifierProvider =
     AsyncNotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
@@ -29,7 +35,8 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
   @override
   Future<AuthState> build() async {
     _log.info('Initializing auth state');
-    final result = await ref.read(_getCurrentUserProvider).call(const NoParams());
+    final result =
+        await ref.read(_getCurrentUserProvider).call(const NoParams());
     return result.fold(
       (failure) {
         _log.warning('Auth init failed: ${failure.message}');
@@ -49,7 +56,8 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
   Future<void> signIn({required String email, required String password}) async {
     _log.info('Sign-in flow started for email=$email');
     state = const AsyncLoading();
-    final result = await ref.read(_signInUseCaseProvider)
+    final result = await ref
+        .read(_signInUseCaseProvider)
         .call(SignInParams(email: email, password: password));
     state = result.fold(
       (f) {
@@ -62,7 +70,9 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
           return AsyncData(AuthAuthenticated(user));
         }
         _log.warning('Non-admin sign-in rejected: email=$email');
-        return const AsyncData(AuthError('Access denied: admin role required.'));
+        return const AsyncData(
+          AuthError('Access denied: admin role required.'),
+        );
       },
     );
   }

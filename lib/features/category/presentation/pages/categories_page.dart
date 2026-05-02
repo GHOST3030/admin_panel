@@ -57,7 +57,7 @@ class CategoriesPage extends ConsumerWidget {
                           onDelete: () => ref
                               .read(categoryNotifierProvider.notifier)
                               .deactivate(c.id),
-                        )),
+                        ),),
                       ]
                     : [
                         DataCell(Text(c.nameEn)),
@@ -70,7 +70,7 @@ class CategoriesPage extends ConsumerWidget {
                           onDelete: () => ref
                               .read(categoryNotifierProvider.notifier)
                               .deactivate(c.id),
-                        )),
+                        ),),
                       ];
                 return DataRow(cells: cells);
               },
@@ -107,7 +107,7 @@ class _CategoryCard extends StatelessWidget {
     return Card(
       child: ListTile(
         title: Text(category.nameEn,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+            style: const TextStyle(fontWeight: FontWeight.bold),),
         subtitle: Text(category.slug),
         trailing: Row(mainAxisSize: MainAxisSize.min, children: [
           _ActiveBadge(category.isActive),
@@ -117,7 +117,7 @@ class _CategoryCard extends StatelessWidget {
             icon: const Icon(Icons.delete_outline, size: 18, color: Colors.red),
             onPressed: onDelete,
           ),
-        ]),
+        ],),
       ),
     );
   }
@@ -136,7 +136,7 @@ class _ActiveBadge extends StatelessWidget {
     child: Text(active ? 'Active' : 'Inactive',
         style: TextStyle(
             fontSize: 11, fontWeight: FontWeight.w600,
-            color: active ? const Color(0xFF166534) : const Color(0xFF991B1B))),
+            color: active ? const Color(0xFF166534) : const Color(0xFF991B1B),),),
   );
 }
 
@@ -150,7 +150,7 @@ class _RowActions extends StatelessWidget {
       icon: const Icon(Icons.delete_outline, size: 18, color: Colors.red),
       onPressed: onDelete,
     ),
-  ]);
+  ],);
 }
 
 class _CategoryFormDialog extends StatefulWidget {
@@ -200,7 +200,7 @@ class _CategoryFormDialogState extends State<_CategoryFormDialog> {
               AdminFormField(controller: _nameAr, label: 'Name (AR)', validator: Validators.required),
               AdminFormField(controller: _slug,   label: 'Slug',      validator: Validators.slug),
               AdminFormField(controller: _order,  label: 'Sort Order',
-                  keyboardType: TextInputType.number, validator: Validators.nonNegativeInt),
+                  keyboardType: TextInputType.number, validator: Validators.nonNegativeInt,),
             ],
           ),
         ),

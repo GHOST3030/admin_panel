@@ -24,14 +24,17 @@ class ImageUploadState {
   final Uint8List? previewBytes;
 
   ImageUploadState copyWith({
-    bool? isLoading, String? uploadedUrl,
-    String? error, Uint8List? previewBytes,
-  }) => ImageUploadState(
-    isLoading: isLoading ?? this.isLoading,
-    uploadedUrl: uploadedUrl ?? this.uploadedUrl,
-    error: error ?? this.error,
-    previewBytes: previewBytes ?? this.previewBytes,
-  );
+    bool? isLoading,
+    String? uploadedUrl,
+    String? error,
+    Uint8List? previewBytes,
+  }) =>
+      ImageUploadState(
+        isLoading: isLoading ?? this.isLoading,
+        uploadedUrl: uploadedUrl ?? this.uploadedUrl,
+        error: error ?? this.error,
+        previewBytes: previewBytes ?? this.previewBytes,
+      );
 }
 
 final imageUploadProvider =
@@ -52,7 +55,11 @@ class ImageUploadNotifier extends StateNotifier<ImageUploadState> {
     state = state.copyWith(isLoading: true, error: null, previewBytes: bytes);
     try {
       final url = await _dataSource.uploadImage(
-          path: path, bytes: bytes, mimeType: mimeType);
+        // ignore: require_trailing_commas
+        path: path,
+        bytes: bytes,
+        mimeType: mimeType,
+      );
       _log.fine('Upload state: complete');
       state = state.copyWith(isLoading: false, uploadedUrl: url);
       return url;
