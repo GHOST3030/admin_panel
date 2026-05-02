@@ -27,17 +27,17 @@ jobs:
         run: flutter pub get
 
       # ─── 4. Analyze (Lint) ─────────────────────────────────
-      # - name: Analyze code
-      #   run: flutter analyze --no-fatal-infos
+      - name: Analyze code
+        run: flutter analyze --no-fatal-infos
 
       # ─── 5. Run Tests ──────────────────────────────────────
-      # - name: Run tests
-      #   run: flutter test --coverage
+      - name: Run tests
+        run: flutter test --coverage
 
       # ─── 6. Build Web ──────────────────────────────────────
-      # - name: Build Web
-      #   run: |
-      #       flutter build web --release
+      - name: Build Web
+        run: |
+            flutter build web --release
 
       # ─── 7. Deploy to Vercel (Production on main) ──────────
 # ─── 7. Deploy to Vercel (Production on main) ──────────
