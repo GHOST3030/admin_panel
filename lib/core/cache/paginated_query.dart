@@ -55,7 +55,7 @@ class PaginatedQuery {
 
     if (filters != null) {
       for (final entry in filters.entries) {
-        query = query.eq(entry.key, entry.value);
+       query = query.eq(entry.key, entry.value);
       }
     }
 

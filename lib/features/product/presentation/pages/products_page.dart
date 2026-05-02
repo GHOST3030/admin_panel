@@ -52,7 +52,7 @@ class ProductsPage extends ConsumerWidget {
                     ? [
                         DataCell(Text(p['name_en'] as String? ?? '')),
                         DataCell(Text(currency.format(
-                            (p['base_price'] as num?)?.toDouble() ?? 0))),
+                            (p['base_price'] as num?)?.toDouble() ?? 0),),),
                         DataCell(_ActiveBadge(p['is_active'] as bool? ?? false)),
                         DataCell(_RowActions(
                           onEdit: () => _showForm(context, ref, p),
