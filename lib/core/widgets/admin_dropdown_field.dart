@@ -18,10 +18,10 @@ class AdminDropdownField<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DropdownButtonFormField<T>(
-        initialValue: value,
-        decoration: InputDecoration(labelText: label),
-        items: items,
-        onChanged: onChanged,
-        validator: validator,
-      );
+    value: value,
+    decoration: InputDecoration(labelText: label),
+    items: items,
+    onChanged: onChanged,
+    validator: validator,
+  );
 }

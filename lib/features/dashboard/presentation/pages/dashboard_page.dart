@@ -3,9 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/responsive/responsive_helper.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/responsive/adaptive_scaffold.dart';
 import '../../../../core/widgets/responsive/adaptive_table.dart';
 import '../../../../core/widgets/responsive/responsive_padding.dart';
+import '../../../../core/widgets/shared/error_banner.dart';
+import '../../../../core/widgets/shared/section_header.dart';
+import '../../../../core/widgets/shared/status_badge.dart';
 import '../providers/dashboard_provider.dart';
 import '../widgets/stat_card.dart';
 
@@ -14,9 +18,9 @@ class DashboardPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final statsAsync = ref.watch(dashboardStatsProvider);
+    final statsAsync  = ref.watch(dashboardStatsProvider);
     final ordersAsync = ref.watch(recentOrdersProvider);
-    final currency = NumberFormat.currency(symbol: '\$');
+    final currency    = NumberFormat.currency(symbol: '\$');
 
     return AdaptiveScaffold(
       appBar: AppBar(title: const Text('Dashboard')),
@@ -25,142 +29,78 @@ class DashboardPage extends ConsumerWidget {
           ref.invalidate(dashboardStatsProvider);
           ref.invalidate(recentOrdersProvider);
         },
-        child: ListView(
-          children: [
-            ResponsivePadding(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ── Stat Cards ──────────────────────────────
-                  statsAsync.when(
-                    loading: () => const _StatsShimmer(),
-                    error: (e, _) => _ErrorBanner('$e'),
-                    data: (stats) =>
-                        _StatsGrid(stats: stats, currency: currency),
-                  ),
+        child: ListView(children: [
+          ResponsivePadding(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
-                  const SizedBox(height: 32),
+                // ── Stats ─────────────────────────────────────
+                statsAsync.when(
+                  loading: () => _StatsShimmer(cols: context.statColumns),
+                  error:   (e, _) => ErrorBanner('$e'),
+                  data: (s) => _StatsGrid(stats: s, currency: currency),
+                ),
 
-                  // ── Recent Orders ───────────────────────────
-                  _SectionHeader(
-                    title: 'Recent Orders',
-                    action: TextButton(
-                      onPressed: () {},
-                      child: const Text('View all'),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
+                const SizedBox(height: 32),
 
-                  ordersAsync.when(
-                    loading: () => const Center(
-                        heightFactor: 3, child: CircularProgressIndicator(),),
-                    error: (e, _) => _ErrorBanner('$e'),
-                    data: (orders) => AdaptiveTable<Map<String, dynamic>>(
-                      columns: const [
-                        'Order ID',
-                        'Customer',
-                        'Status',
-                        'Amount',
-                        'Date',
-                      ],
-                      tabletColumns: const [
-                        'Order ID',
-                        'Status',
-                        'Amount',
-                      ],
-                      items: orders,
-                      desktopRow: (o, isTablet) {
-                        final date =
-                            DateTime.tryParse(o['created_at'] as String? ?? '');
-                        final cells = isTablet
-                            ? [
-                                DataCell(
-                                    Text((o['id'] as String).substring(0, 8)),),
-                                DataCell(
-                                    _StatusChip(o['status'] as String? ?? ''),),
-                                DataCell(Text(currency.format(
-                                    (o['total_amount'] as num?)?.toDouble() ??
-                                        0,),),),
-                              ]
-                            : [
-                                DataCell(
-                                    Text((o['id'] as String).substring(0, 8)),),
-                                DataCell(Text(
-                                  ((o['users'] as Map?)?['email'] as String?) ??
-                                      '—',
-                                  overflow: TextOverflow.ellipsis,
-                                ),),
-                                DataCell(
-                                    _StatusChip(o['status'] as String? ?? ''),),
-                                DataCell(Text(currency.format(
-                                    (o['total_amount'] as num?)?.toDouble() ??
-                                        0,),),),
-                                DataCell(Text(date != null
-                                    ? DateFormat('MMM d, yyyy').format(date)
-                                    : '—',),),
-                              ];
-                        return DataRow(cells: cells);
-                      },
-                      mobileCard: (o) {
-                        final date =
-                            DateTime.tryParse(o['created_at'] as String? ?? '');
-                        return Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '#${(o['id'] as String).substring(0, 8)}',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,),
-                                    ),
-                                    _StatusChip(o['status'] as String? ?? ''),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  ((o['users'] as Map?)?['email'] as String?) ??
-                                      '—',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                        currency.format(
-                                            (o['total_amount'] as num?)
-                                                    ?.toDouble() ??
-                                                0,),
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w600,),),
-                                    Text(
-                                      date != null
-                                          ? DateFormat('MMM d').format(date)
-                                          : '—',
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                // ── Recent orders ─────────────────────────────
+                SectionHeader(
+                  title: 'Recent Orders',
+                  action: TextButton(
+                    onPressed: () {},
+                    child: const Text('View all'),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 12),
+
+                ordersAsync.when(
+                  loading: () => const Center(
+                      heightFactor: 3,
+                      child: CircularProgressIndicator()),
+                  error: (e, _) => ErrorBanner('$e'),
+                  data: (orders) =>
+                      AdaptiveTable<Map<String, dynamic>>(
+                    columns: const [
+                      'Order ID', 'Customer', 'Status', 'Amount', 'Date',
+                    ],
+                    tabletColumns: const ['Order ID', 'Status', 'Amount'],
+                    items: orders,
+                    desktopRow: (o, isTablet) {
+                      final date = DateTime.tryParse(
+                          o['created_at'] as String? ?? '');
+                      final amount = currency.format(
+                          (o['total_amount'] as num?)?.toDouble() ?? 0);
+                      final id = (o['id'] as String).substring(0, 8);
+
+                      return DataRow(cells: isTablet
+                          ? [
+                              DataCell(Text('#$id')),
+                              DataCell(StatusBadge(
+                                  o['status'] as String? ?? '')),
+                              DataCell(Text(amount)),
+                            ]
+                          : [
+                              DataCell(Text('#$id')),
+                              DataCell(Text(
+                                ((o['users'] as Map?)?['email'] as String?) ?? '—',
+                                overflow: TextOverflow.ellipsis,
+                              )),
+                              DataCell(StatusBadge(
+                                  o['status'] as String? ?? '')),
+                              DataCell(Text(amount)),
+                              DataCell(Text(date != null
+                                  ? DateFormat('MMM d, y').format(date)
+                                  : '—')),
+                            ]);
+                    },
+                    mobileCard: (o) => _OrderCard(order: o, currency: currency),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ]),
       ),
     );
   }
@@ -173,118 +113,91 @@ class _StatsGrid extends StatelessWidget {
   final NumberFormat currency;
 
   @override
-  Widget build(BuildContext context) {
-    final cols = context.statColumns;
-    return GridView.count(
-      crossAxisCount: cols,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
-      childAspectRatio:
-          context.responsiveWhen(mobile: 2.4, tablet: 2.6, desktop: 3.0),
-      children: [
-        StatCard(
-            title: 'Total Orders',
-            value: '${stats.totalOrders}',
-            icon: Icons.receipt_long_rounded,
-            color: const Color(0xFF4361EE),),
-        StatCard(
-            title: 'Total Revenue',
-            value: currency.format(stats.totalRevenue),
-            icon: Icons.attach_money_rounded,
-            color: const Color(0xFF2DC653),),
-        StatCard(
-            title: 'Total Products',
-            value: '${stats.totalProducts}',
-            icon: Icons.inventory_2_rounded,
-            color: const Color(0xFFF4A261),),
-        StatCard(
-            title: 'Total Users',
-            value: '${stats.totalUsers}',
-            icon: Icons.people_rounded,
-            color: const Color(0xFFE63946),),
-      ],
-    );
-  }
-}
-
-// ── Widgets ───────────────────────────────────────────────────
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title, this.action});
-  final String title;
-  final Widget? action;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold),),
-        if (action != null) action!,
-      ],
-    );
-  }
+  Widget build(BuildContext context) => GridView.count(
+    crossAxisCount: context.statColumns,
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    crossAxisSpacing: 16,
+    mainAxisSpacing: 16,
+    childAspectRatio: context.responsiveWhen(
+        mobile: 2.4, tablet: 2.6, desktop: 3.0),
+    children: [
+      StatCard(title: 'Total Orders',   value: '${stats.totalOrders}',
+          icon: Icons.receipt_long_rounded, color: context.secondary),
+      StatCard(title: 'Total Revenue',  value: currency.format(stats.totalRevenue),
+          icon: Icons.attach_money_rounded, color: context.successColor),
+      StatCard(title: 'Total Products', value: '${stats.totalProducts}',
+          icon: Icons.inventory_2_rounded, color: context.warningColor),
+      StatCard(title: 'Total Users',    value: '${stats.totalUsers}',
+          icon: Icons.people_rounded, color: context.error),
+    ],
+  );
 }
 
 class _StatsShimmer extends StatelessWidget {
-  const _StatsShimmer();
+  const _StatsShimmer({required this.cols});
+  final int cols;
   @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: context.statColumns,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
-      childAspectRatio: 3.0,
-      children: List.generate(4, (_) => const Card(child: SizedBox.expand())),
-    );
-  }
+  Widget build(BuildContext context) => GridView.count(
+    crossAxisCount: cols,
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    crossAxisSpacing: 16,
+    mainAxisSpacing: 16,
+    childAspectRatio: 3.0,
+    children: List.generate(4, (_) => Card(
+      child: Container(color: context.surfaceContainerLow))),
+  );
 }
 
-class _ErrorBanner extends StatelessWidget {
-  const _ErrorBanner(this.message);
-  final String message;
+// ── Mobile order card ─────────────────────────────────────────
+class _OrderCard extends StatelessWidget {
+  const _OrderCard({required this.order, required this.currency});
+  final Map<String, dynamic> order;
+  final NumberFormat currency;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.errorContainer,
-        borderRadius: BorderRadius.circular(8),
+    final date = DateTime.tryParse(order['created_at'] as String? ?? '');
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('#${(order['id'] as String).substring(0, 8)}',
+                    style: context.bodyMedium
+                        .copyWith(fontWeight: FontWeight.bold)),
+                StatusBadge(order['status'] as String? ?? ''),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+                ((order['users'] as Map?)?['email'] as String?) ?? '—',
+                style: context.bodySmall.copyWith(color: context.mutedText)),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                    currency.format(
+                        (order['total_amount'] as num?)?.toDouble() ?? 0),
+                    style: context.bodyMedium
+                        .copyWith(fontWeight: FontWeight.w600)),
+                Text(
+                    date != null
+                        ? DateFormat('MMM d').format(date)
+                        : '—',
+                    style: context.bodySmall
+                        .copyWith(color: context.mutedText)),
+              ],
+            ),
+          ],
+        ),
       ),
-      child: Text(message,
-          style:
-              TextStyle(color: Theme.of(context).colorScheme.onErrorContainer),),
-    );
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  const _StatusChip(this.status);
-  final String status;
-
-  @override
-  Widget build(BuildContext context) {
-    final (bg, fg) = switch (status) {
-      'delivered' => (const Color(0xFFDCFCE7), const Color(0xFF166534)),
-      'processing' => (const Color(0xFFFEF3C7), const Color(0xFF92400E)),
-      'shipped' => (const Color(0xFFDBEAFE), const Color(0xFF1E40AF)),
-      'cancelled' => (const Color(0xFFFEE2E2), const Color(0xFF991B1B)),
-      _ => (const Color(0xFFF3F4F6), const Color(0xFF374151)),
-    };
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration:
-          BoxDecoration(color: bg, borderRadius: BorderRadius.circular(20)),
-      child: Text(status,
-          style:
-              TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: fg),),
     );
   }
 }

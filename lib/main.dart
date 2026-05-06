@@ -1,37 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'core/logging/app_logger.dart';
 import 'core/router/app_router.dart';
 import 'core/supabase/supabase_initializer.dart';
 import 'core/theme/app_theme.dart';
 
 Future<void> main() async {
-  final log = AppLogger.getLogger('Main');
-
-  runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    AppLogger.init();
-
-    log.info('Application starting');
-
-    FlutterError.onError = (details) {
-      log.shout('Unhandled Flutter error: ${details.exceptionAsString()}');
-      if (details.stack != null) {
-        log.shout('Stack trace:\n${details.stack}');
-      }
-    };
-
-    await SupabaseInitializer.init();
-    log.info('Application initialized successfully');
-
-    runApp(const ProviderScope(child: AdminApp()));
-  }, (error, stackTrace) {
-    log.shout('Unhandled async error: $error');
-    log.shout('Stack trace:\n$stackTrace');
-  });
+  WidgetsFlutterBinding.ensureInitialized();
+  await SupabaseInitializer.init();
+  runApp(const ProviderScope(child: AdminApp()));
 }
 
 class AdminApp extends ConsumerWidget {

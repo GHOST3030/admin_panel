@@ -39,7 +39,7 @@ class PaginatedQuery {
     final start = page * pageSize;
     final end   = start + pageSize - 1;
 
-    var query = client
+    dynamic query = client
         .from(table)
         .select(select ?? '*')
         .order(orderBy, ascending: ascending)

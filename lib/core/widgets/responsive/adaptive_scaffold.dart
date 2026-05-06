@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../responsive/breakpoints.dart';
+import '../../responsive/responsive_helper.dart';
 
 /// Drop-in Scaffold replacement for admin pages.
 /// Wraps content with max-width constraint and centers on large screens.

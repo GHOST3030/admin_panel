@@ -1,3 +1,4 @@
+/// Barrel export — import this single file to access all admin providers.
 export '../../auth/presentation/providers/auth_provider.dart';
 export '../../category/presentation/providers/category_provider.dart';
 export '../../product/presentation/providers/product_provider.dart';

@@ -1,5 +1,7 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import '../providers/image_upload_provider.dart';
 
 // Note: Add `file_picker: ^8.0.0` and `uuid: ^4.4.0` to pubspec.yaml

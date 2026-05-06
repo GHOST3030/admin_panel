@@ -1,11 +1,7 @@
 import 'dart:typed_data';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/di/providers.dart';
-import '../../../../core/logging/app_logger.dart';
 import '../../data/image_upload_datasource.dart';
-
-final _log = AppLogger.getLogger('ImageUploadNotifier');
 
 final imageUploadDataSourceProvider = Provider<ImageUploadDataSource>(
   (ref) => ImageUploadDataSource(ref.watch(supabaseClientProvider)),
@@ -24,17 +20,14 @@ class ImageUploadState {
   final Uint8List? previewBytes;
 
   ImageUploadState copyWith({
-    bool? isLoading,
-    String? uploadedUrl,
-    String? error,
-    Uint8List? previewBytes,
-  }) =>
-      ImageUploadState(
-        isLoading: isLoading ?? this.isLoading,
-        uploadedUrl: uploadedUrl ?? this.uploadedUrl,
-        error: error ?? this.error,
-        previewBytes: previewBytes ?? this.previewBytes,
-      );
+    bool? isLoading, String? uploadedUrl,
+    String? error, Uint8List? previewBytes,
+  }) => ImageUploadState(
+    isLoading: isLoading ?? this.isLoading,
+    uploadedUrl: uploadedUrl ?? this.uploadedUrl,
+    error: error ?? this.error,
+    previewBytes: previewBytes ?? this.previewBytes,
+  );
 }
 
 final imageUploadProvider =
@@ -51,27 +44,17 @@ class ImageUploadNotifier extends StateNotifier<ImageUploadState> {
     required Uint8List bytes,
     required String mimeType,
   }) async {
-    _log.fine('Upload state: loading, path=$path');
     state = state.copyWith(isLoading: true, error: null, previewBytes: bytes);
     try {
       final url = await _dataSource.uploadImage(
-        // ignore: require_trailing_commas
-        path: path,
-        bytes: bytes,
-        mimeType: mimeType,
-      );
-      _log.fine('Upload state: complete');
+          path: path, bytes: bytes, mimeType: mimeType);
       state = state.copyWith(isLoading: false, uploadedUrl: url);
       return url;
     } catch (e) {
-      _log.severe('Upload state: error', e);
       state = state.copyWith(isLoading: false, error: e.toString());
       return null;
     }
   }
 
-  void reset() {
-    _log.fine('Upload state: reset');
-    state = const ImageUploadState();
-  }
+  void reset() => state = const ImageUploadState();
 }

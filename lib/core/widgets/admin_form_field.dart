@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Reusable labeled form field used across all admin forms.
 class AdminFormField extends StatelessWidget {
   const AdminFormField({
     super.key,
@@ -15,8 +14,8 @@ class AdminFormField extends StatelessWidget {
     this.obscureText = false,
     this.suffixIcon,
     this.enabled = true,
+    this.prefixIcon,
   });
-
   final TextEditingController controller;
   final String label;
   final String? hint;
@@ -26,21 +25,23 @@ class AdminFormField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final bool obscureText;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
   final bool enabled;
 
   @override
   Widget build(BuildContext context) => TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          hintText: hint,
-          suffixIcon: suffixIcon,
-        ),
-        validator: validator,
-        maxLines: maxLines,
-        keyboardType: keyboardType,
-        inputFormatters: inputFormatters,
-        obscureText: obscureText,
-        enabled: enabled,
-      );
+    controller: controller,
+    decoration: InputDecoration(
+      labelText: label,
+      hintText: hint,
+      suffixIcon: suffixIcon,
+      prefixIcon: prefixIcon,
+    ),
+    validator: validator,
+    maxLines: maxLines,
+    keyboardType: keyboardType,
+    inputFormatters: inputFormatters,
+    obscureText: obscureText,
+    enabled: enabled,
+  );
 }
