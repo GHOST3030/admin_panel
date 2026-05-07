@@ -20,7 +20,7 @@ class ProductNotifier extends AsyncNotifier<ProductState> {
       if (categoryId != null) query = query.eq('category_id', categoryId);
       final res = await query.order('review_count');
       state = AsyncData(
-          ProductLoaded(List<Map<String, dynamic>>.from(res as List)));
+          ProductLoaded(List<Map<String, dynamic>>.from(res as List)),);
     } catch (e) {
       state = AsyncData(ProductError(e.toString()));
     }
